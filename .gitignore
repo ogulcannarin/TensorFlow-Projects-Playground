@@ -1,0 +1,63 @@
+# Python & Machine Learning
+__pycache__/
+*.py[cod]
+*$py.class
+.Python
+build/
+dist/
+*.egg-info/
+*.egg
+
+# TensorFlow / Keras Model Files (Large files usually not pushed to git)
+*.h5
+*.keras
+*.model
+*.pb
+*.tflite
+*.ckpt
+*.index
+*.meta
+checkpoint
+
+# Virtual Environments
+venv/
+.venv/
+env/
+ENV/
+bin/
+include/
+lib/
+share/
+pyvenv.cfg
+
+# Jupyter Notebook
+.ipynb_checkpoints
+*/.ipynb_checkpoints/*
+
+# Data & Logging
+*.csv
+*.xlsx
+*.json
+*.log
+*.sqlite
+tensorboard_logs/
+logs/
+
+# VS Code & IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS Specific
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# --- EXCEPTIONS ---
+# Grafikleri (README'de göründüğü için) tutmak istiyoruz
+!**/plots/*.png
+!**/plots/*.jpg
+!**/plots/*.jpeg
+!**/assets/**
+
