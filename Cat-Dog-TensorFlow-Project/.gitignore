@@ -1,0 +1,14 @@
+# Python cache dosyaları
+__pycache__/
+*.pyc
+
+# Eğitilmiş büyük model dosyaları
+*.h5
+*.keras
+
+# Veri Setleri (EN ÖNEMLİSİ)
+train/
+*.zip
+
+# Test için kullandığımız resimler
+test_image.jpg
