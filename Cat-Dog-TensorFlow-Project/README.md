@@ -1,72 +1,37 @@
-# TensorFlow Kedi-Köpek Sınıflandırma Projesi 🐱🐶
+# 🐾 TensorFlow Kedi-Köpek Sınıflandırma Projesi
 
-Bu proje, TensorFlow ve Keras kütüphanelerini kullanarak bir **Evrişimli Sinir Ağı (CNN)** modelini eğitir. Model, kendisine verilen bir resmin kedi mi yoksa köpek mi olduğunu yüksek bir doğruluk oranıyla tahmin etmeyi öğrenir.
+Bu proje, Kaggle üzerindeki devasa bir veri setini kullanarak, bir bilgisayarın kedi ve köpek resimlerini birbirinden nasıl ayırt edebileceğini gösteren uçtan uca bir görüntü işleme (Computer Vision) uygulamasıdır.
 
-Bu depo, modeli eğitmek (`main.py`) ve eğitilmiş modeli kullanarak tahmin yapmak (`predict.py`) için gereken tüm kodları içerir.
+## 🏗️ Model Mimarisi: CNN (Convolutional Neural Network)
 
-## 🚀 Kullanılan Teknolojiler
+Model, görüntüleri katman katman analiz ederek önce kenarları, sonra şekilleri ve nihayetinde nesneleri (kulak, burun vb.) tanımayı öğrenir:
 
-* **Python 3.10+**
-* **TensorFlow (Keras):** Modelin oluşturulması, eğitilmesi ve yüklenmesi için.
-* **Matplotlib:** Eğitim sonuçlarının (başarı ve kayıp grafikleri) görselleştirilmesi için.
-* **OS Modülü:** Veri setinin (25.000 resim) otomatik olarak `cat` ve `dog` klasörlerine ayrılması için.
-* **Kaggle:** 800MB'lık orijinal veri setinin kaynağı.
+1.  **Rescaling Katmanı:** Görüntü piksellerini [0, 255] aralığından [0, 1] aralığına normalize eder.
+2.  **Conv2D & MaxPooling (3 Katman):**
+    -   32, 64 ve 128 filtreli evrişim katmanları.
+    -   Her katman sonrası veriyi küçülterek önemli özellikleri öne çıkaran MaxPooling.
+3.  **Flatten Katmanı:** 2D matrisleri 1D vektöre dönüştürerek sınıflandırma kısmına hazırlar.
+4.  **Dense Katmanı (512 Nöron):** Yakalanan özellikleri derinlemesine analiz eder.
+5.  **Output Katmanı (Sigmoid):** Tek bir çıktı üretir (0: Kedi, 1: Köpek).
+
+## 📊 Veri Hazırlama Süreci (Pipeline)
+
+- **Otomatik Düzenleme:** `main.py` çalıştığında, 25.000 resmi isimlerine göre `cat/` ve `dog/` klasörlerine otomatik olarak dağıtır.
+- **Validasyon Bölümü:** Verinin %20'si eğitim sırasında modeli test etmek için otomatik olarak ayrılır (`validation_split=0.2`).
+- **Verim:** `image_dataset_from_directory` fonksiyonu ile veriler diskten verimli bir şekilde okunur, belleği yormaz.
+
+## 📈 Eğitim Sonuçları
+Eğitim bittiğinde, aşağıdaki değerleri içeren bir grafik oluşturulur:
+- **Eğitim Doğruluğu vs Doğrulama Doğruluğu**
+- **Eğitim Kaybı vs Doğrulama Kaybı**
+
+Bu grafikler, modelin veriyi ezberleyip ezberlemediğini (Overfitting) kontrol etmenizi sağlar.
+
+## 🔮 Tahmin Yapma (Prediction)
+`cats_vs_dogs_model.h5` dosyası oluştuktan sonra, herhangi bir resmi test etmek için:
+1. Resmi bu klasöre `test_image.jpg` adıyla kaydedin.
+2. `predict.py` dosyasını çalıştırın.
+3. Ekranda tahmin sonucu ve güven oranı belirecektir.
 
 ---
-
-## 🏁 Nasıl Kullanılır?
-
-Bu projeyi bilgisayarınızda çalıştırmak için 3 ana adımı takip etmeniz gerekmektedir.
-
-### Adım 1: Kurulum
-
-1.  Bu depoyu bilgisayarınıza klonlayın veya indirin.
-2.  Gerekli Python kütüphanelerini `pip` kullanarak yükleyin:
-    ```bash
-    pip install tensorflow matplotlib h5py
-    ```
-
-### Adım 2: Veri Setini Hazırlama ve Modeli Eğitme
-
-Modeli eğitmek için `main.py` script'i kullanılır. Ancak bu script'in çalışması için orijinal veri setine ihtiyacı vardır.
-
-1.  **Veri Setini İndirin:**
-    [Kaggle: Dogs vs. Cats](https://www.kaggle.com/c/dogs-vs-cats/data) yarışma sayfasından `train.zip` (yaklaşık 812 MB) dosyasını indirin.
-
-2.  **Veriyi Çıkartın:**
-    İndirdiğiniz `train.zip` dosyasını, bu proje klasörünün içine çıkartın. İşlem bittiğinde, proje klasörünüzde `train` adında (içinde 25.000 resim olan) bir alt klasör oluşmalıdır.
-
-    Klasör yapısı şöyle görünmelidir:
-    ```
-    tensorflow-cat-dog-project/
-    |-- main.py
-    |-- predict.py
-    |-- .gitignore
-    |-- README.md
-    |-- train/
-        |-- cat.0.jpg
-        |-- dog.0.jpg
-        |-- ... (binlerce resim)
-    ```
-
-3.  **Modeli Eğitin:**
-    Hazırlıklar tamamsa, terminalden `main.py` dosyasını çalıştırın:
-    ```bash
-    python main.py
-    ```
-
-Bu script, `train` klasöründeki resimleri otomatik olarak `train/cat` ve `train/dog` klasörlerine ayıracak, modeli 3 tur (epoch) boyunca eğitecek ve işlem bittiğinde `cats_vs_dogs_model.h5` adında eğitilmiş bir model dosyası kaydedecektir.
-
-*(Not: Bu eğitim işlemi, bilgisayarınızın işlemci hızına bağlı olarak 15-20 dakika sürebilir.)*
-
-### Adım 3: Tahmin Yapma (Eğlenceli Kısım!)
-
-Modeli bir kez eğittikten sonra, `main.py`'yi tekrar çalıştırmanıza gerek yoktur. `predict.py` script'i, kaydedilen `.h5` modelini kullanarak saniyeler içinde tahmin yapabilir.
-
-1.  İnternetten rastgele bir kedi veya köpek resmi bulun.
-2.  Resmi proje klasörüne (`predict.py`'nin yanına) indirin ve adını **`test_image.jpg`** olarak değiştirin.
-3.  Aşağıdaki komutu çalıştırın:
-    ```bash
-    python predict.py
-    ```
-
+*Bilgisayarların dünyayı bizim gibi görmesi için ilk adım...* 🐶🐱
