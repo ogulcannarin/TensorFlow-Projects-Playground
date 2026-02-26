@@ -60,4 +60,8 @@ desktop.ini
 !**/plots/*.jpg
 !**/plots/*.jpeg
 !**/assets/**
+!**/images/**
 
+# Yeni Eklenen Projeler Icin Veri Klasorleri (Dataset vb. dosyalari yoksaymak icin)
+Functiol_Apı/data/
+Regularization/data/
