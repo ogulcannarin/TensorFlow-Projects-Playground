@@ -1,0 +1,20 @@
+# Python sanal ortamı
+venv/
+__pycache__/
+*.pyc
+
+# Veri setleri (Çok büyük oldukları için yüklenmez)
+dogs-vs-cats/
+PetImages/
+*.zip
+
+# Modeller (H5 modelleri çok ağır olabilir)
+# Not: .tflite dosyasını projenin küçük bir parçası olduğu için yükleyebilirsin
+*.h5
+
+# İşletim sistemi dosyaları
+.DS_Store
+Thumbs.db
+
+# Gizli değişkenler
+.env
